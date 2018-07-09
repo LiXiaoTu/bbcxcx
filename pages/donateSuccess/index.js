@@ -17,12 +17,13 @@ Page({
   onLoad: function () {
     var that = this;
     that.setData({
-      donateView:wx.getStorage({
+      donateView:wx.getStorageSync({
         key: 'donateView'
       })
     })
     util.getPromise({'oid': wx.getStorageSync('oid'), 'userID': wx.getStorageSync('userID')}, 'services/getDonateSuccessLists').then(res => {
       wx.removeStorageSync('oid');
+      wx.removeStorageSync('allMoney');
       that.setData({
         hotPcc: res
       })

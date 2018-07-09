@@ -124,6 +124,7 @@ Page({
             'openid':wx.getStorageSync('openid')
           }, 'services/getJsApiForWxXcxPayment').then(res => {
             console.log(res)
+            var paymentData = JSON.parse(res.data);
             if (res === undefined) {
               wx.showToast({
                 title: '支付失败，请稍后再试！',
@@ -131,27 +132,25 @@ Page({
                 success: function () {
                   wx.removeStorageSync('oid');
                   wx.removeStorageSync('allMoney');
-                  // setTimeout(function(){
-                  //   wx.redirectTo({
-                  //     url: '../view/index?donateView=' + wx.getStorageSync('donateView'),
-                  //   })
-                  // },1500);
+                  setTimeout(function(){
+                    wx.redirectTo({
+                      url: '../view/index?donateView=' + wx.getStorageSync('donateView'),
+                    })
+                  },1500);
                 }
               })
             }else{
               wx.requestPayment({
-                'timeStamp': res.data.timeStamp,
-                'nonceStr': res.data.nonceStr,
-                'package': res.data.package,
-                'signType': res.data.signType,
-                'paySign': res.data.paySign,
+                'timeStamp': paymentData.timeStamp,
+                'nonceStr': paymentData.nonceStr,
+                'package': paymentData.package,
+                'signType': paymentData.signType,
+                'paySign': paymentData.paySign,
                 'success': function (res) {
                   wx.showToast({
                     title: '支付成功！',
                     icon: 'none',
                     success: function () {
-                      // wx.removeStorageSync('oid');
-                       wx.removeStorageSync('allMoney');
                        setTimeout(function () {
                          wx.redirectTo({
                            url: '../donateSuccess/index?donateView=' + wx.getStorageSync('donateView'),
